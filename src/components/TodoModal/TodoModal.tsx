@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import cn from 'classnames';
 
 import { Todo } from '../../types/Todo';
@@ -9,7 +9,7 @@ import { Loader } from '../Loader';
 
 type Props = {
   selectedTodo: Todo | null;
-  setSelectedTodo: (todo: Todo | null) => void;
+  setSelectedTodo: Dispatch<SetStateAction<Todo | null>>;
 };
 
 export const TodoModal: React.FC<Props> = ({
@@ -21,21 +21,21 @@ export const TodoModal: React.FC<Props> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const todoUserId = selectedTodo?.userId;
-
-    if (todoUserId) {
-      setLoading(true);
-      setError(null);
-
-      getUser(todoUserId)
-        .then(setSelectedUser)
-        .catch(() =>
-          setError('Failed to load user data. Please try again later.'),
-        )
-        .finally(() => {
-          setLoading(false);
-        });
+    if (!selectedTodo?.userId) {
+      return;
     }
+
+    setLoading(true);
+    setError(null);
+
+    getUser(selectedTodo.userId)
+      .then(setSelectedUser)
+      .catch(() => {
+        setError('Failed to load user data. Please try again later.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [selectedTodo]);
 
   return (

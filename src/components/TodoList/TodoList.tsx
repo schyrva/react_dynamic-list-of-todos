@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import cn from 'classnames';
 
 import { Todo } from '../../types/Todo';
@@ -6,7 +6,7 @@ import { Todo } from '../../types/Todo';
 type Props = {
   todos: Todo[];
   selectedTodo: Todo | null;
-  setSelectedTodo: (todo: Todo | null) => void;
+  setSelectedTodo: Dispatch<SetStateAction<Todo | null>>;
 };
 
 export const TodoList: React.FC<Props> = ({

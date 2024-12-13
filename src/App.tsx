@@ -8,13 +8,14 @@ import { TodoModal } from './components/TodoModal';
 import { TodoFilter } from './components/TodoFilter';
 import { getTodos } from './api';
 import { Loader } from './components/Loader';
+import { Filters } from './types/Filters';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [query, setQuery] = useState('');
-  const [status, setStatus] = useState<string>('all');
+  const [status, setStatus] = useState<string>(Filters.All);
   const [error, setError] = useState<string | null>(null);
 
   const filterTodos = (
@@ -28,13 +29,13 @@ export const App: React.FC = () => {
       )
       .filter(todo => {
         switch (currentStatus) {
-          case 'completed':
+          case Filters.Completed:
             return todo.completed;
 
-          case 'active':
+          case Filters.Active:
             return !todo.completed;
 
-          case 'all':
+          case Filters.All:
           default:
             return true;
         }
