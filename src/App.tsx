@@ -15,6 +15,7 @@ export const App: React.FC = () => {
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<string>('all');
+  const [error, setError] = useState<string | null>(null);
 
   const filterTodos = (
     todosArray: Todo[],
@@ -44,11 +45,12 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
+    setError(null);
+
     getTodos()
       .then(setTodos)
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch(() => setError('Failed to load. Please try again later.'))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -57,6 +59,8 @@ export const App: React.FC = () => {
         <div className="container">
           <div className="box">
             <h1 className="title">Todos:</h1>
+
+            {error && <p className="notification is-danger">{error}</p>}
 
             <div className="block">
               <TodoFilter
