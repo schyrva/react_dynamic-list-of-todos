@@ -1,7 +1,7 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import cn from 'classnames';
+import { Dispatch, SetStateAction } from 'react';
 
 import { Todo } from '../../types/Todo';
+import { TodoItem } from '../TodoItem';
 
 type Props = {
   todos: Todo[];
@@ -29,53 +29,14 @@ export const TodoList: React.FC<Props> = ({
     </thead>
 
     <tbody>
-      {todos.map(todo => {
-        const isActive = todo.id === selectedTodo?.id;
-
-        return (
-          <tr
-            data-cy="todo"
-            className={cn({ 'has-background-info-light': isActive })}
-            key={todo.id}
-          >
-            <td className="is-vcentered">{todo.id}</td>
-            <td className="is-vcentered">
-              {todo.completed && (
-                <span className="icon" data-cy="iconCompleted">
-                  <i className="fas fa-check" />
-                </span>
-              )}
-            </td>
-            <td className="is-vcentered is-expanded">
-              <p
-                className={cn({
-                  'has-text-success': todo.completed,
-                  'has-text-danger': !todo.completed,
-                })}
-              >
-                {todo.title}
-              </p>
-            </td>
-            <td className="has-text-right is-vcentered">
-              <button
-                data-cy="selectButton"
-                className="button"
-                type="button"
-                onClick={() => setSelectedTodo(todo)}
-              >
-                <span className="icon">
-                  <i
-                    className={cn({
-                      'far fa-eye-slash': isActive,
-                      'far fa-eye': !isActive,
-                    })}
-                  />
-                </span>
-              </button>
-            </td>
-          </tr>
-        );
-      })}
+      {todos.map(todo => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          isActive={todo.id === selectedTodo?.id}
+          onSelect={() => setSelectedTodo(todo)}
+        />
+      ))}
     </tbody>
   </table>
 );

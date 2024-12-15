@@ -9,49 +9,26 @@ import { TodoFilter } from './components/TodoFilter';
 import { getTodos } from './api';
 import { Loader } from './components/Loader';
 import { Filters } from './types/Filters';
+import { filterTodos } from './utils';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [query, setQuery] = useState('');
-  const [status, setStatus] = useState<string>(Filters.All);
+  const [status, setStatus] = useState(Filters.All);
   const [error, setError] = useState<string | null>(null);
-
-  const filterTodos = (
-    todosArray: Todo[],
-    searchQuery: string,
-    currentStatus: string,
-  ) => {
-    return todosArray
-      .filter(todo =>
-        todo.title.toLowerCase().includes(searchQuery.trim().toLowerCase()),
-      )
-      .filter(todo => {
-        switch (currentStatus) {
-          case Filters.Completed:
-            return todo.completed;
-
-          case Filters.Active:
-            return !todo.completed;
-
-          case Filters.All:
-          default:
-            return true;
-        }
-      });
-  };
 
   const filteredTodos = filterTodos(todos, query, status);
 
   useEffect(() => {
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
 
     getTodos()
       .then(setTodos)
       .catch(() => setError('Failed to load. Please try again later.'))
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -73,7 +50,7 @@ export const App: React.FC = () => {
             </div>
 
             <div className="block">
-              {loading ? (
+              {isLoading ? (
                 <Loader />
               ) : (
                 <TodoList

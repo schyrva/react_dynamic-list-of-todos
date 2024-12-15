@@ -16,7 +16,7 @@ export const TodoModal: React.FC<Props> = ({
   selectedTodo,
   setSelectedTodo,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +25,7 @@ export const TodoModal: React.FC<Props> = ({
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
 
     getUser(selectedTodo.userId)
@@ -34,7 +34,7 @@ export const TodoModal: React.FC<Props> = ({
         setError('Failed to load user data. Please try again later.');
       })
       .finally(() => {
-        setLoading(false);
+        setIsLoading(false);
       });
   }, [selectedTodo]);
 
@@ -42,11 +42,13 @@ export const TodoModal: React.FC<Props> = ({
     <div className="modal is-active" data-cy="modal">
       <div className="modal-background" onClick={() => setSelectedTodo(null)} />
 
-      {loading ? (
-        <Loader />
-      ) : error ? (
+      {isLoading && <Loader />}
+
+      {!isLoading && error && (
         <div className="notification is-danger">{error}</div>
-      ) : (
+      )}
+
+      {!isLoading && !error && (
         <div className="modal-card">
           <header className="modal-card-head">
             <div
